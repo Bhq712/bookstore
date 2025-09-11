@@ -22,9 +22,17 @@ public class Book {
     private String isbn;
     private double price;
 
-    protected Book() {}
 
     //konstruktorit
+
+    public Book() {
+         this.title = null;
+        this.author = null;
+        this.publicationYear = 0;
+        this.isbn = null;
+        this.price = 0.0;
+    }
+
     public Book(String title, String author, int publicationYear, String isbn, double price) {
         this.title = title;
         this.author = author;

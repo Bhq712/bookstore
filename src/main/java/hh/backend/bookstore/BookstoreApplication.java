@@ -20,7 +20,7 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-	public CommandLineRunner BoostoreDemo(BookRepository bookRepository) {
+	public CommandLineRunner BookstoreDemo(BookRepository bookRepository) {
 		return (args) -> {
 			log.info("save a couple of books");
 			bookRepository.save(new Book("Orvot katseet", "Janice Muller", 2020, "1234567890", 13.45));
