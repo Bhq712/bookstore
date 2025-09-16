@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import hh.backend.bookstore.domain.Book;
 import hh.backend.bookstore.domain.BookRepository;
@@ -31,12 +32,6 @@ public class BookController {
         return "booklist"; //booklist.html
     }
 
-    @GetMapping("/addbook")
-    public String addBook(Model model) {
-        model.addAttribute("book", new Book());
-        return "addbook"; // addbook.html
-    }
-
     @PostMapping("/booklist")
     public String saveBook(@ModelAttribute Book book, Model model) {
         bookRepository.save(book);
@@ -44,11 +39,32 @@ public class BookController {
         return "booklist";
     }
 
-    @PostMapping("/deletebook/{id}")
-    public String deleteBook(@PathVariable("id") Long id, Model model) {
-        bookRepository.deleteById(id);
-        model.addAttribute("books", bookRepository.findAll());
-        return "booklist";
+    @GetMapping("/addbook")
+    public String addBook(@RequestParam(value = "id", required = false) Long id, Model model) {
+        Book book = (id != null) ? bookRepository.findById(id).orElse(new Book()) : new Book();
+        model.addAttribute("book", book);
+        return "addbook";
     }
+
+    @PostMapping("/addbook")
+    public String saveOrUpdateBook(@ModelAttribute Book book) {
+        bookRepository.save(book);
+        return "redirect:/booklist";
+    }
+
+    @GetMapping("/deletebook/{id}")
+    public String deleteBook(@PathVariable("id") Long id) {
+        bookRepository.deleteById(id);
+        return "redirect:/booklist";
+    }
+
+    @GetMapping("/editbook/{id}")
+    public String editBook(@PathVariable("id") Long id, Model model) {
+        Book book = bookRepository.findById(id).orElse(new Book());
+        model.addAttribute("book", book);
+        return "addbook"; // Käytetään samaa lomaketta
+    }
+
+    
 
 }
