@@ -22,13 +22,17 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-	public CommandLineRunner BookstoreDemo(BookRepository bookRepository) {
+	public CommandLineRunner BookstoreDemo(BookRepository bookRepository, CategoryRepository categoryRepository) {
 		return (args) -> {
-			log.info("save a couple of books");
-			bookRepository.save(new Book("Orvot katseet", "Janice Muller", 2020, "1234567890", 13.45));
-			bookRepository.save(new Book("Kaukainen tulevaisuus", "Adam Kenner", 2023, "2234567890", 19.99));
-			bookRepository.save(new Book("Kultainen tie", "Talia Smith", 1999, "3234567890", 24.99));
-			bookRepository.save(new Book("Tulikärpänen", "Joanna Geller", 2012, "4234567890", 21.56));
+			log.info("save a couple of books with categories");
+			Category scifi = categoryRepository.findByName("Scifi").iterator().hasNext() ? categoryRepository.findByName("Scifi").iterator().next() : categoryRepository.save(new Category("Scifi"));
+			Category romance = categoryRepository.findByName("Romance").iterator().hasNext() ? categoryRepository.findByName("Romance").iterator().next() : categoryRepository.save(new Category("Romance"));
+			Category horror = categoryRepository.findByName("Horror").iterator().hasNext() ? categoryRepository.findByName("Horror").iterator().next() : categoryRepository.save(new Category("Horror"));
+
+			bookRepository.save(new Book("Orvot katseet", "Janice Muller", 2020, "1234567890", 13.45, romance));
+			bookRepository.save(new Book("Kaukainen tulevaisuus", "Adam Kenner", 2023, "2234567890", 19.99, scifi));
+			bookRepository.save(new Book("Kultainen tie", "Talia Smith", 1999, "3234567890", 24.99, horror));
+			bookRepository.save(new Book("Tulikärpänen", "Joanna Geller", 2012, "4234567890", 21.56, romance));
 
 			log.info("fetch all books");
 			for (Book book : bookRepository.findAll()) {

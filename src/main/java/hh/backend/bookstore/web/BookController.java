@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import hh.backend.bookstore.domain.Book;
 import hh.backend.bookstore.domain.BookRepository;
+import hh.backend.bookstore.domain.CategoryRepository;
+import hh.backend.bookstore.domain.Category;
 
 @Controller
 public class BookController {
 
     BookRepository bookRepository;
+    CategoryRepository categoryRepository;
 
-	BookController(BookRepository bookRepository){
-		this.bookRepository = bookRepository;
-	}
+    BookController(BookRepository bookRepository, CategoryRepository categoryRepository){
+        this.bookRepository = bookRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
 
     @GetMapping("/bookstore")
@@ -43,6 +47,7 @@ public class BookController {
     public String addBook(@RequestParam(value = "id", required = false) Long id, Model model) {
         Book book = (id != null) ? bookRepository.findById(id).orElse(new Book()) : new Book();
         model.addAttribute("book", book);
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addbook";
     }
 
@@ -62,6 +67,7 @@ public class BookController {
     public String editBook(@PathVariable("id") Long id, Model model) {
         Book book = bookRepository.findById(id).orElse(new Book());
         model.addAttribute("book", book);
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addbook"; // Käytetään samaa lomaketta
     }
 
