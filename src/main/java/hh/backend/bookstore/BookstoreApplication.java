@@ -8,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import hh.backend.bookstore.domain.BookRepository;
+import hh.backend.bookstore.domain.CategoryRepository;
 import hh.backend.bookstore.domain.Book;
+import hh.backend.bookstore.domain.Category;
 
 
 @SpringBootApplication
@@ -31,6 +33,21 @@ public class BookstoreApplication {
 			log.info("fetch all books");
 			for (Book book : bookRepository.findAll()) {
 				log.info(book.toString());
+			}
+		};
+	}
+	
+	@Bean
+	public CommandLineRunner BookstoreCategory(CategoryRepository categoryRepository) {
+		return (args) -> {
+			log.info("save some categories");
+			categoryRepository.save(new Category("Scifi"));
+			categoryRepository.save(new Category("Romance"));
+			categoryRepository.save(new Category("Horror"));
+
+			log.info("fetch all categories");
+			for (Category category : categoryRepository.findAll()) {
+				log.info(category.toString());
 			}
 		};
 	}
