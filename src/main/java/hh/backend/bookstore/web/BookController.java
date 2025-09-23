@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import hh.backend.bookstore.domain.Book;
 import hh.backend.bookstore.domain.BookRepository;
 import hh.backend.bookstore.domain.CategoryRepository;
-import hh.backend.bookstore.domain.Category;
 
 @Controller
 public class BookController {
