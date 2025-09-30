@@ -1,5 +1,6 @@
 package hh.backend.bookstore.web;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +58,7 @@ public class BookController {
     }
 
     @GetMapping("/deletebook/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public String deleteBook(@PathVariable("id") Long id) {
         bookRepository.deleteById(id);
         return "redirect:/booklist";
