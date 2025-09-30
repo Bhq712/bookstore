@@ -11,6 +11,9 @@ import hh.backend.bookstore.domain.BookRepository;
 import hh.backend.bookstore.domain.CategoryRepository;
 import hh.backend.bookstore.domain.Book;
 import hh.backend.bookstore.domain.Category;
+import hh.backend.bookstore.domain.User;
+import hh.backend.bookstore.domain.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @SpringBootApplication
@@ -52,6 +55,46 @@ public class BookstoreApplication {
 			log.info("fetch all categories");
 			for (Category category : categoryRepository.findAll()) {
 				log.info(category.toString());
+			}
+		};
+	}
+	
+	@Bean
+	public CommandLineRunner initUsers(UserRepository userRepository) {
+		return (args) -> {
+			// Tarkista onko käyttäjiä jo olemassa
+			if (userRepository.findByUsername("user") == null) {
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				
+				log.info("Creating users with BCrypt hashed passwords");
+				
+				// Luo USER-roolin käyttäjä
+				User user1 = new User();
+				user1.setUsername("user");
+				user1.setPassword(passwordEncoder.encode("user"));
+				user1.setEmail("user@example.com");
+				user1.setRole("USER");
+				userRepository.save(user1);
+				
+				// Luo ADMIN-roolin käyttäjä
+				User admin = new User();
+				admin.setUsername("admin");
+				admin.setPassword(passwordEncoder.encode("admin"));
+				admin.setEmail("admin@example.com");
+				admin.setRole("ADMIN");
+				userRepository.save(admin);
+
+				// Luo Tiia -roolin käyttäjä
+				User tiia = new User();
+				tiia.setUsername("tiia");
+				tiia.setPassword(passwordEncoder.encode("tiia123"));
+				tiia.setEmail("tiia@example.com");
+				tiia.setRole("USER");
+				userRepository.save(tiia);
+				
+				log.info("Users created successfully");
+			} else {
+				log.info("Users already exist in database");
 			}
 		};
 	}
